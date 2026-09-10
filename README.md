@@ -73,8 +73,8 @@
 ### 安装与启动（仓库自带训练好的模型，克隆即用）
 
 ```bash
-git clone https://github.com/oyh221971/-.git
-cd -
+git clone https://github.com/oyh221971/bearing-predictive-maintenance-system.git
+cd bearing-predictive-maintenance-system
 python -m pip install -r requirements.txt
 python run.py          # Windows 也可双击 start.bat
 ```
