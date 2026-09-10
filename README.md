@@ -12,6 +12,8 @@
 ![Acceptance](https://img.shields.io/badge/验收-44%2F44%20passed-brightgreen)
 
 > 技术栈：Python · FastAPI · scikit-learn · NumPy/SciPy · SQLite · ECharts（本地化，无外网依赖，无任何大模型 API）
+>
+> 📖 [English version](README_EN.md)
 
 ---
 
