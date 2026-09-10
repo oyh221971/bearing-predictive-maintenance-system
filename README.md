@@ -73,8 +73,8 @@
 ### 安装与启动（仓库自带训练好的模型，克隆即用）
 
 ```bash
-git clone https://github.com/oyh221971/轴承故障预测性维护系统.git
-cd 轴承故障预测性维护系统
+git clone https://github.com/oyh221971/-.git
+cd -
 python -m pip install -r requirements.txt
 python run.py          # Windows 也可双击 start.bat
 ```
