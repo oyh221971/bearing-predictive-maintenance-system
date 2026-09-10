@@ -1,0 +1,113 @@
+{
+  "trained_at": "2026-09-10T12:53:39",
+  "feature_names": [
+    "rms",
+    "peak",
+    "p2p",
+    "crest_factor",
+    "kurtosis",
+    "skewness",
+    "shape_factor",
+    "impulse_factor",
+    "margin_factor",
+    "spec_centroid",
+    "spec_spread",
+    "dominant_freq",
+    "band_power_ratio",
+    "env_bpfo",
+    "env_bpfo2",
+    "env_bpfi",
+    "env_bpfi2",
+    "env_bsf2",
+    "env_bsf4",
+    "env_max"
+  ],
+  "n_features": 20,
+  "fault_classes": [
+    "outer",
+    "inner",
+    "ball",
+    "normal"
+  ],
+  "sample_rate": 12000,
+  "n_points": 6000,
+  "bearing": {
+    "name": "SKF 6205",
+    "n_balls": 9,
+    "ball_diameter_mm": 7.94,
+    "pitch_diameter_mm": 39.04,
+    "contact_angle_deg": 0.0
+  },
+  "thresholds": {
+    "fault_prob": 0.6,
+    "alert_rul_hours": 200.0
+  },
+  "data": {
+    "n_samples": 1610,
+    "real_samples": 1205
+  },
+  "metrics": {
+    "classification_accuracy": 1.0,
+    "macro_f1": 1.0,
+    "per_class": {
+      "ball": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "inner": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "normal": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "outer": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      }
+    },
+    "severity_mae": 0.011266749379653133,
+    "severity_r2": 0.9876620156305127,
+    "n_train": 1350,
+    "n_test": 450,
+    "rul_mae_hours": 250.34753072887762,
+    "rul_r2": 0.6748101907672324,
+    "real_data": {
+      "accuracy": 0.605,
+      "accuracy_de_only": 0.903125,
+      "accuracy_de_standard": 0.8807692307692307,
+      "macro_f1": 0.9132055963746755,
+      "per_class": {
+        "ball": {
+          "precision": 0.7207207207207207,
+          "recall": 1.0,
+          "f1": 0.837696335078534
+        },
+        "inner": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "normal": {
+          "precision": 1.0,
+          "recall": 0.9833333333333333,
+          "f1": 0.9915966386554622
+        },
+        "outer": {
+          "precision": 1.0,
+          "recall": 0.7,
+          "f1": 0.8235294117647058
+        }
+      },
+      "severity_mae": 0.05899531250000001,
+      "n_train_files": 45,
+      "n_test_files": 15,
+      "n_test": 600
+    }
+  }
+}

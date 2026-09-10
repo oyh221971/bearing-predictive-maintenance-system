@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# 运行期数据库与可再生成的数据集（不提交）
+data/*.db
+data/*.db-wal
+data/*.db-shm
+data/*.db-journal
+data/raw/*.csv
+
+# CWRU 真实数据集（体积约 170MB，通过 tools/download_cwru*.ps1 获取，不提交）
+data/cwru/
+
+# 说明：
+#   - 训练模型（training/models/*.joblib）与演示信号（data/raw/demo_signals.npz）
+#     随仓库发布，克隆即用；重新训练会覆盖它们
+#   - 本仓库不含任何 API 密钥 / 凭据 / 个人数据（见 SECURITY.md）
+
+# IDE
+.idea/
+.vscode/

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>轴承故障预测性维护系统</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-icon">⚙</span>
+      <div>
+        <div class="brand-title">轴承故障预测性维护系统</div>
+        <div class="brand-sub">Bearing Fault Predictive Maintenance</div>
+      </div>
+    </div>
+    <div class="controls">
+      <span class="status-dot" id="statusDot"></span>
+      <span class="status-text" id="statusText">连接中…</span>
+      <label class="ctl-label" for="scenario">监测场景</label>
+      <select id="scenario">
+        <option value="normal" selected>正常运转</option>
+        <option value="inner">内圈故障</option>
+        <option value="outer">外圈故障</option>
+        <option value="ball">滚动体故障</option>
+        <option value="degradation">全寿命退化模拟</option>
+      </select>
+      <button id="btnStart" class="btn primary">▶ 启动</button>
+      <button id="btnStop" class="btn">■ 停止</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- KPI 卡片 -->
+    <section class="cards">
+      <div class="card">
+        <div class="card-title">健康指数</div>
+        <div class="card-value" id="kpiHi">--</div>
+        <div class="bar"><div class="bar-fill" id="kpiHiBar"></div></div>
+        <div class="card-sub">0~1，越接近 1 越健康</div>
+      </div>
+      <div class="card">
+        <div class="card-title">剩余寿命</div>
+        <div class="card-value" id="kpiRul">--</div>
+        <div class="card-sub" id="kpiRulSub">小时（模型估计）</div>
+      </div>
+      <div class="card">
+        <div class="card-title">振动 RMS</div>
+        <div class="card-value" id="kpiRms">--</div>
+        <div class="card-sub">m/s² 加速度有效值</div>
+      </div>
+      <div class="card">
+        <div class="card-title">轴承温度</div>
+        <div class="card-value" id="kpiTemp">--</div>
+        <div class="card-sub">°C</div>
+      </div>
+      <div class="card">
+        <div class="card-title">当前状态</div>
+        <div class="card-value state-value" id="kpiState">--</div>
+        <div class="card-sub" id="kpiStateSub">等待数据…</div>
+      </div>
+    </section>
+
+    <!-- 离线诊断：上传真实采集数据 -->
+    <section class="panel">
+      <h2>离线诊断 <span class="hint">上传真实采集的振动数据（CSV/TXT 单列数值，任意采样率与长度）</span></h2>
+      <div class="offline-row">
+        <input type="file" id="fileInput" accept=".csv,.txt,.dat,.asc">
+        <label class="ctl-label" for="fsInput">采样频率 (Hz)</label>
+        <input type="number" id="fsInput" value="12000" min="100" step="100">
+        <label class="ctl-label" for="freqInput">转频 (Hz，留空自动识别)</label>
+        <input type="number" id="freqInput" value="" min="0.1" step="0.01" placeholder="自动识别">
+        <button id="btnDiagnose" class="btn primary">开始诊断</button>
+      </div>
+      <div id="offlineResult" class="offline-result">等待上传文件…</div>
+    </section>
+
+    <!-- 诊断面板 + 波形 -->
+    <section class="grid two">
+      <div class="panel">
+        <h2>AI 故障诊断</h2>
+        <div class="diag-main">
+          <div class="diag-type" id="diagType">--</div>
+          <div class="diag-conf" id="diagConf">置信度 --</div>
+        </div>
+        <div class="prob-bars" id="probBars"></div>
+        <div class="severity-wrap">
+          <div class="severity-label">故障严重度 <span id="severityValue">--</span></div>
+          <div class="bar"><div class="bar-fill sev" id="severityBar"></div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>实时振动波形</h2>
+        <div class="chart" id="chartWave"></div>
+      </div>
+    </section>
+
+    <!-- 频谱 + 包络谱 -->
+    <section class="grid two">
+      <div class="panel">
+        <h2>振动频谱 <span class="hint">（竖线为故障特征频率）</span></h2>
+        <div class="chart" id="chartSpec"></div>
+      </div>
+      <div class="panel">
+        <h2>包络谱 <span class="hint">（Hilbert 解调，故障定位更清晰）</span></h2>
+        <div class="chart" id="chartEnv"></div>
+      </div>
+    </section>
+
+    <!-- 趋势 + 告警 -->
+    <section class="grid trend-alert">
+      <div class="panel">
+        <h2>健康趋势 <span class="hint">（最近 120 个监测样本）</span></h2>
+        <div class="chart" id="chartTrend"></div>
+      </div>
+      <div class="panel">
+        <h2>活动告警</h2>
+        <ul class="alert-list" id="alertList">
+          <li class="alert-empty">暂无告警</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 历史记录 -->
+    <section class="panel">
+      <h2>最近监测记录</h2>
+      <div class="table-wrap">
+        <table class="history" id="historyTable">
+          <thead>
+            <tr>
+              <th>时间</th><th>场景</th><th>诊断结果</th><th>置信度</th>
+              <th>严重度</th><th>剩余寿命</th><th>健康指数</th>
+              <th>RMS</th><th>温度</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    数据来源：滚动轴承物理仿真（SKF 6205 几何参数）&nbsp;·&nbsp;
+    模型：随机森林（故障诊断/严重度）+ 梯度提升回归（剩余寿命）&nbsp;·&nbsp;
+    采样 12 kHz / 0.5 s 窗口
+  </footer>
+
+  <script src="/static/vendor/echarts.min.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
